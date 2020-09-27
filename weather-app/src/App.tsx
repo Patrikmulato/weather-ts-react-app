@@ -3,20 +3,17 @@ import axios from 'axios';
 import { OpenWeatherResponse } from './interface/types';
 import { LoadingScreen } from './components';
 import CurrentWeather from './pages/CurrentWeather';
+import { usePosition } from './hooks/usePosition';
 
 function App() {
   const [weatherData, setWeatherData] = useState<OpenWeatherResponse>();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
+  const position = usePosition();
+  console.log(position);
+
   const baseUrl = 'http://api.openweathermap.org/data/2.5';
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(getPosition(position: PositionCallback) {
-      console.log(position);
-    });
-  }
-
 
   useEffect(() => {
     const getWeatherData = async () => {
@@ -24,7 +21,7 @@ function App() {
       setIsLoading(true);
       try {
         const result = await axios.get<OpenWeatherResponse>(
-          `${baseUrl}/onecall?lat=33.441792&lon=-94.037689&exclude=hourly,minutely&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
+          `${baseUrl}/onecall?lat=${position.latitude}&lon=${position.longitude}&exclude=hourly,minutely&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
         );
         setWeatherData(result.data);
       } catch (error) {
@@ -34,7 +31,7 @@ function App() {
     };
 
     getWeatherData();
-  }, []);
+  }, [position]);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -44,7 +41,7 @@ function App() {
   }
   return (
     <>
-      <CurrentWeather weatherData={weatherData} city={'Budapest'} />
+      <CurrentWeather weatherData={weatherData} />
     </>
   );
 }

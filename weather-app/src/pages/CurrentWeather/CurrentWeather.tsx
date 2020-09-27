@@ -7,28 +7,36 @@ import { OpenWeatherResponse } from '../../interface/types';
 import { Temperature } from '../../components';
 import './CurrentWeather.css';
 import { covertUnixToDate } from '../../utils/TimeConverter';
+
 interface CurrentWeatherProps {
   weatherData: OpenWeatherResponse;
-  city: string;
 }
 
 const CurrentWeather: React.FC<CurrentWeatherProps> = ({
   weatherData,
-  city,
 }: CurrentWeatherProps) => {
   return (
     <Container className='vertical-center' fluid>
       <Card className='text-center weather-card'>
-        <Card.Header>{city}</Card.Header>
+        <Card.Header>
+          <h4>
+            <strong> Weather forecast</strong>
+          </h4>
+        </Card.Header>
         <Card.Body>
           <Row>
-            <Col>{covertUnixToDate(weatherData.current.dt)}</Col>
+            <Col>
+              <h5>{covertUnixToDate(weatherData.current.dt)}</h5>
+            </Col>
           </Row>
           <Row>
             <Col>
-              <Temperature temp={weatherData.current.temp} />
+              <h2>
+                <Temperature temp={weatherData.current.temp} />
+              </h2>
             </Col>
           </Row>
+          <br />
           <Row>
             <Col>morning</Col>
             <Col>day</Col>
@@ -43,6 +51,11 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({
             </Col>
             <Col>
               <Temperature temp={weatherData.daily[0].temp.night} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <small>{weatherData.timezone}</small>
             </Col>
           </Row>
         </Card.Body>
