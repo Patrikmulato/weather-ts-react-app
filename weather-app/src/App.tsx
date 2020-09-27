@@ -11,7 +11,6 @@ function App() {
   const [isError, setIsError] = useState(false);
 
   const position = usePosition();
-  console.log(position);
 
   const baseUrl = 'http://api.openweathermap.org/data/2.5';
 
@@ -21,7 +20,7 @@ function App() {
       setIsLoading(true);
       try {
         const result = await axios.get<OpenWeatherResponse>(
-          `${baseUrl}/onecall?lat=${position.latitude}&lon=${position.longitude}&exclude=hourly,minutely&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
+          `${baseUrl}/onecall?lat=${position.latitude}&lon=${position.longitude}&exclude=minutely&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
         );
         setWeatherData(result.data);
       } catch (error) {
